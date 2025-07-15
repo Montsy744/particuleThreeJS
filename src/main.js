@@ -1,5 +1,6 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, PointsMaterial, BufferGeometry, Float32BufferAttribute, MathUtils } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, PointsMaterial, BufferGeometry, Float32BufferAttribute, MathUtils, Clock, Line } from 'three';
 import { AxesHelper } from 'three';
+import { LineBasicMaterial } from 'three';
 import { Group } from 'three';
 import { Points } from 'three';
 import { TextureLoader } from 'three';
@@ -14,7 +15,7 @@ const alphaMap = textureLoader.load('/alphamap.png');
 
 const scene = new Scene();
 const count = 100;
-const distance = 2;
+const distance = 3;
 
 //scene.add(new AxesHelper())
 
@@ -53,6 +54,8 @@ const point = new Points(geometry,pointMaterial);
 
 const group = new Group();
 group.add(point);
+
+
 scene.add(group);
 
 const renderer = new WebGLRenderer({
@@ -66,8 +69,12 @@ document.body.appendChild(renderer.domElement)
 renderer.render(scene, camera)
 
 const controls = new OrbitControls(camera, renderer.domElement);
+const clock = new Clock();
 
 function tick() {
+  const time = clock.getElapsedTime();
+  point.rotation.y = time * 0.05;
+  point.rotation.x = time * 0.01;
   renderer.render(scene, camera);
   controls.update();
   requestAnimationFrame(tick);
